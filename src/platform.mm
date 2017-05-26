@@ -42,4 +42,9 @@ QSize Platform::statusBarSize()
     return QSize(size.width, size.height);
 }
 
+float Platform::scaleFactor()
+{
+    return [UIScreen mainScreen].scale;
+}
+
 #endif // #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)

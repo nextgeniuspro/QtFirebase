@@ -40,6 +40,11 @@ public:
      * Get size for status bar
      */
     static QSize statusBarSize();
+    
+    /*
+     * Returns device scale factor
+     */
+    static float scaleFactor();
 
 private:
     static TWindow s_Window;

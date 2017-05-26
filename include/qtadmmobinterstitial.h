@@ -7,14 +7,10 @@
 #include <QPoint>
 #include <QSize>
 #include "firebase/future.h"
+#include "firebase/admob/interstitial_ad.h"
 
-namespace firebase {
-    namespace admob {
-        class InterstitialAd;
-    }
-}
 
-class QtAdmMobInterstitial : public QObject
+class QtAdmMobInterstitial : public QObject, public firebase::admob::InterstitialAd::Listener
 {
     Q_PROPERTY(QString unitId READ unitId WRITE setUnitId NOTIFY unitIdChanged)
     Q_PROPERTY(bool isReady READ isReady NOTIFY ready)
@@ -56,16 +52,24 @@ public:
      * Is banner loaded
      */
     bool isLoaded();
+    
+    /*
+     * InterstitialAd::Listener method
+     */
+    virtual void OnPresentationStateChanged(firebase::admob::InterstitialAd* interstitial_ad,
+                                            firebase::admob::InterstitialAd::PresentationState state);
 
 signals:
     void unitIdChanged();
     void ready();
     void loaded();
     void loading();
+    void closed();
 
 private:
     void initialize(char* unitId);
     void cleanup();
+    void load();
     static void onInitCompletionCallback(const firebase::Future<void>& future, void* userData);
     static void onLoadCompletionCallback(const firebase::Future<void>& future, void* userData);
 

@@ -70,7 +70,9 @@ void QtAdMobBanner::setPosition(const QPoint& position)
         return;
     }
 
-    m_BannerView->MoveTo(position.x(), position.y() + Platform::statusBarSize().height());
+    int x = position.x() * Platform::scaleFactor();
+    int y = (position.y() + Platform::statusBarSize().height()) * Platform::scaleFactor();
+    m_BannerView->MoveTo(x, y);
 }
 
 const QPoint& QtAdMobBanner::position() const
@@ -198,8 +200,8 @@ void QtAdMobBanner::onLoadCompletionCallback(const firebase::Future<void>& futur
     }
     // If during loading banner was marked as visible - show it
     if (self->visible()) {
-        self->setPosition(self->position());
         self->m_BannerView->Show();
+        self->setPosition(self->position());
     }
     self->m_BannerView->MoveTo(self->position().x(), self->position().y());
     self->loaded();

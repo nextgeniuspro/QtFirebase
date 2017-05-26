@@ -38,4 +38,9 @@ QSize Platform::statusBarSize()
     return QSize();
 }
 
+float Platform::scaleFactor()
+{
+    return 1.0f;
+}
+
 #endif // #if !(TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)

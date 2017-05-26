@@ -74,6 +74,7 @@ void QtAdmMobInterstitial::initialize(char* unitId)
     m_Interstitial = new firebase::admob::InterstitialAd();
     m_Interstitial->Initialize(static_cast<firebase::admob::AdParent>(Platform::window()), unitId);
     m_Interstitial->InitializeLastResult().OnCompletion(QtAdmMobInterstitial::onInitCompletionCallback, this);
+    m_Interstitial->SetListener(this);
 }
 
 void QtAdmMobInterstitial::cleanup()
@@ -81,8 +82,40 @@ void QtAdmMobInterstitial::cleanup()
     if (m_Interstitial) {
         m_Interstitial->InitializeLastResult().OnCompletion(0, 0);
         m_Interstitial->LoadAdLastResult().OnCompletion(0, 0);
+        m_Interstitial->SetListener(0);
         delete m_Interstitial;
     }
+}
+
+void QtAdmMobInterstitial::load()
+{
+    firebase::admob::AdRequest adRequest = {};
+    
+    adRequest.gender = firebase::admob::kGenderUnknown;
+    
+    // The user's birthday, if known. Note that months are indexed from one.
+    adRequest.birthday_day = 10;
+    adRequest.birthday_month = 11;
+    adRequest.birthday_year = 1976;
+    
+    // Additional keywords to be used in targeting.
+    static const char* kKeywords[] = {"AdMob", "C++", "Fun"};
+    adRequest.keyword_count = sizeof(kKeywords) / sizeof(kKeywords[0]);
+    adRequest.keywords = kKeywords;
+    
+    // "Extra" key value pairs can be added to the request as well.
+    static const firebase::admob::KeyValuePair kRequestExtras[] = {{"the_name_of_an_extra", "the_value_for_that_extra"}};
+    adRequest.extras_count = sizeof(kRequestExtras) / sizeof(kRequestExtras[0]);
+    adRequest.extras = kRequestExtras;
+    
+    // Register the device IDs associated with any devices that will be used to
+    // test your app. Below are sample test device IDs used for making the ad request.
+    static const char* kTestDeviceIDs[] = {"09c57fb538d2911f489c6b2c55dbf495"};
+    adRequest.test_device_id_count = sizeof(kTestDeviceIDs) / sizeof(kTestDeviceIDs[0]);
+    adRequest.test_device_ids = kTestDeviceIDs;
+    
+    m_Interstitial->LoadAd(adRequest);
+    m_Interstitial->LoadAdLastResult().OnCompletion(QtAdmMobInterstitial::onLoadCompletionCallback, this);
 }
 
 void QtAdmMobInterstitial::onInitCompletionCallback(const firebase::Future<void>& future, void* userData) {
@@ -90,33 +123,7 @@ void QtAdmMobInterstitial::onInitCompletionCallback(const firebase::Future<void>
     Q_UNUSED(future);
 
     QtAdmMobInterstitial *self = static_cast<QtAdmMobInterstitial *>(userData);
-    firebase::admob::AdRequest adRequest = {};
-
-    adRequest.gender = firebase::admob::kGenderUnknown;
-
-    // The user's birthday, if known. Note that months are indexed from one.
-    adRequest.birthday_day = 10;
-    adRequest.birthday_month = 11;
-    adRequest.birthday_year = 1976;
-
-    // Additional keywords to be used in targeting.
-    static const char* kKeywords[] = {"AdMob", "C++", "Fun"};
-    adRequest.keyword_count = sizeof(kKeywords) / sizeof(kKeywords[0]);
-    adRequest.keywords = kKeywords;
-
-    // "Extra" key value pairs can be added to the request as well.
-    static const firebase::admob::KeyValuePair kRequestExtras[] = {{"the_name_of_an_extra", "the_value_for_that_extra"}};
-    adRequest.extras_count = sizeof(kRequestExtras) / sizeof(kRequestExtras[0]);
-    adRequest.extras = kRequestExtras;
-
-    // Register the device IDs associated with any devices that will be used to
-    // test your app. Below are sample test device IDs used for making the ad request.
-    static const char* kTestDeviceIDs[] = {"09c57fb538d2911f489c6b2c55dbf495"};
-    adRequest.test_device_id_count = sizeof(kTestDeviceIDs) / sizeof(kTestDeviceIDs[0]);
-    adRequest.test_device_ids = kTestDeviceIDs;
-
-    self->m_Interstitial->LoadAd(adRequest);
-    self->m_Interstitial->LoadAdLastResult().OnCompletion(QtAdmMobInterstitial::onLoadCompletionCallback, self);
+    self->load();
     emit self->ready();
 }
 
@@ -134,6 +141,16 @@ void QtAdmMobInterstitial::onLoadCompletionCallback(const firebase::Future<void>
         self->m_Interstitial->Show();
     }
     self->loaded();
+}
+
+void QtAdmMobInterstitial::OnPresentationStateChanged(firebase::admob::InterstitialAd* /*interstitial_ad*/,
+                                                      firebase::admob::InterstitialAd::PresentationState state)
+{
+    if (state == firebase::admob::InterstitialAd::kPresentationStateHidden) {
+        m_IsVisible = false;
+        emit closed();
+        initialize(m_UnitId);
+    }
 }
 
 #endif // #if defined(QTFIREBASE_ADMOB_ENABLED)
