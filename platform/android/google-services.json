@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "257877269876",
+    "firebase_url": "https://qtfirebase-5b957.firebaseio.com",
+    "project_id": "qtfirebase-5b957",
+    "storage_bucket": "qtfirebase-5b957.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257877269876:android:b3141a092daef755",
+        "android_client_info": {
+          "package_name": "org.dreamdev.QtFirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "257877269876-pp12q7dupmijoeopjno9o3imc23sbmhe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjeNEir_uxVQM-oYutSoTixgGRJbckrp8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
