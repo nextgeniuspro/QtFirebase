@@ -57,4 +57,26 @@ QString User::phoneNumber() const
     return m_PhoneNumber;
 }
 
+void User::requestToken(bool refresh, std::function<void(QString token)> callback)
+{
+    if (m_User) {
+        auto result = m_User->GetToken(refresh);
+        result.OnCompletion([callback](const firebase::Future<std::string>& future) {
+            bool ok = (future.status() == firebase::kFutureStatusComplete &&
+                       future.error() == firebase::auth::kAuthErrorNone);
+            if (ok) {
+                QString token = QString((*future.result()).c_str());
+                callback(token);
+            } else {
+                callback("");
+            }
+        });
+    }
+}
+
+firebase::auth::User* User::firebaseUser() const
+{
+    return m_User;
+}
+
 #endif // QTFIREBASE_AUTHENTIFICATION_ENABLED

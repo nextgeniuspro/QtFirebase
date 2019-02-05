@@ -4,6 +4,7 @@
 #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)
 #include <qpa/qplatformnativeinterface.h>
 #include <UIKit/UIKit.h>
+#include <QStandardPaths>
 
 using namespace qfb;
 
@@ -45,6 +46,12 @@ int Platform::bannerStatusBarYOffset()
 float Platform::scaleFactor()
 {
     return [UIScreen mainScreen].scale;
+}
+
+const QString& Platform::documentsPath()
+{
+    static QString defaultDir = QStandardPaths::standardLocations(QStandardPaths::TempLocation).value(0);
+    return defaultDir;
 }
 
 #endif // #if (TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)

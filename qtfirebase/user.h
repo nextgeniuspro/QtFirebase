@@ -59,6 +59,16 @@ public:
      * Get phone number
      */
     QString phoneNumber() const;
+    
+    /*
+     * Get auth token
+     */
+    Q_INVOKABLE void requestToken(bool refresh, std::function<void(QString token)> callback);
+    
+    /*
+     * Internal
+     */
+    firebase::auth::User* firebaseUser() const;
 
 signals:
     void fullNameChanged();

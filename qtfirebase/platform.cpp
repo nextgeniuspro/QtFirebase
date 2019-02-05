@@ -47,4 +47,20 @@ float Platform::scaleFactor()
     return 1.0f;
 }
 
+const QString& Platform::documentsPath()
+{
+#if defined(__ANDROID__)
+    static QString defaultDir;
+    if (defaultDir.isEmpty())
+    {
+        QAndroidJniObject mediaDir = QAndroidJniObject::callStaticObjectMethod("android/os/Environment", "getExternalStorageDirectory", "()Ljava/io/File;");
+        defaultDir = mediaDir.toString();
+    }
+#else
+    static QString defaultDir = "/";
+#endif
+    
+    return defaultDir;
+}
+
 #endif // #if !(TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR)

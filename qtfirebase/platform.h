@@ -34,6 +34,11 @@ public:
      * Device scale factor
      */
     static float scaleFactor();
+    
+    /*
+     * Documents path
+     */
+    static const QString& documentsPath();
 
 private:
     static TWindow s_Window;

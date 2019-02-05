@@ -7,6 +7,9 @@
 #include "qtfirebase/adrequest.h"
 #include "qtfirebase/authentification.h"
 #include "qtfirebase/user.h"
+#include "qtfirebase/platform.h"
+#include <QFile>
+#include <QTextStream>
 
 using namespace qfb;
 
@@ -119,7 +122,11 @@ void MainWindow::onButtonSignUpClicked()
 
 void MainWindow::onButtonSignInClicked()
 {
-    m_Auth->signIn(ui->emailEdit->text(), ui->passwordEdit->text());
+    if (m_Auth->user()) {
+        m_Auth->signOut();
+    } else {
+        m_Auth->signIn(ui->emailEdit->text(), ui->passwordEdit->text());
+    }
 }
 
 void MainWindow::onSignIn(qfb::User* user)
