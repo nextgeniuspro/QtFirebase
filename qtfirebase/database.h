@@ -47,7 +47,7 @@ signals:
 public slots:
     
 private:
-    firebase::database::Database *m_Database;
+    firebase::database::Database* getDatabase();
 };
     
 } // namespace qfb

@@ -14,8 +14,6 @@ using namespace qfb;
 
 Database::Database(QObject *parent) : QObject(parent)
 {
-    auto app = Firebase::instance()->app();
-    m_Database = ::firebase::database::Database::GetInstance(app);
 }
 
 Database::~Database()
@@ -25,7 +23,7 @@ Database::~Database()
 
 void Database::GetValue(const QString& path, std::function<void(QVariant)> callback)
 {
-    auto ref = m_Database->GetReference();
+    auto ref = getDatabase()->GetReference();
     auto child = ref.Child(path.toUtf8().data());
     
     auto future = child.GetValue();
@@ -64,7 +62,7 @@ void Database::GetValue(const QString& path, std::function<void(QVariant)> callb
 
 void Database::SetValue(const QString& path, const QVariant& value, std::function<void(bool)> callback)
 {
-    auto ref = m_Database->GetReference();
+    auto ref = getDatabase()->GetReference();
     auto child = ref.Child(path.toUtf8().data());
     
     ::firebase::Future<void> future;
@@ -99,5 +97,11 @@ void Database::SetValue(const QString& path, const QVariant& value, std::functio
 
 void Database::PurgeOutstandingWrites()
 {
-    m_Database->PurgeOutstandingWrites();
+    getDatabase()->PurgeOutstandingWrites();
+}
+
+firebase::database::Database* Database::getDatabase()
+{
+    auto app = Firebase::instance()->app();
+    return ::firebase::database::Database::GetInstance(app);
 }
