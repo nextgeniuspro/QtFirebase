@@ -17,7 +17,8 @@ SOURCES += \
     $$PWD/authentification.cpp \
     $$PWD/qstringlist2cstyle.cpp \
     $$PWD/adrequest.cpp \
-    $$PWD/user.cpp
+    $$PWD/user.cpp \
+    $$PWD/database.cpp
 
 OBJECTIVE_SOURCES += \
     $$PWD/platform.mm
@@ -32,7 +33,8 @@ HEADERS  += \
     $$PWD/types.h \
     $$PWD/qstringlist2cstyle.h \
     $$PWD/adrequest.h \
-    $$PWD/user.h
+    $$PWD/user.h \
+    $$PWD/database.h
 
 INCLUDEPATH += \
     $$PWD/sdk/firebase_cpp_sdk/include
@@ -44,6 +46,7 @@ ios: {
     QMAKE_LFLAGS += -ObjC
     LIBS += \
         -lsqlite3 -lz \
+        -licucore \
         -framework AVFoundation \
         -framework AudioToolbox \
         -framework CoreTelephony \
@@ -92,6 +95,15 @@ contains(DEFINES, QTFIREBASE_AUTHENTIFICATION_ENABLED) {
         -framework GTMSessionFetcher
 }
 
+# Database
+contains(DEFINES, QTFIREBASE_DATABASE_ENABLED) {
+    LIBS += \
+        -framework firebase_database \
+        -F$$PWD/sdk/Firebase/Database \
+        -framework FirebaseDatabase \
+        -framework leveldb-library
+}
+
 } # ios
 
 android: {
@@ -109,10 +121,15 @@ android: {
     }
 
     LIBS += -L$$LIBPATH -lfirebase_app -lfirebase_admob
-# Analytics
-contains(DEFINES, QTFIREBASE_ANALYTICS_ENABLED) {
-    LIBS += -lfirebase_analytics
-}
+
+    # Analytics
+    contains(DEFINES, QTFIREBASE_ANALYTICS_ENABLED) {
+        LIBS += -lfirebase_analytics
+    }
+    # Database
+    contains(DEFINES, QTFIREBASE_DATABASE_ENABLED) {
+        LIBS += -lfirebase_database
+    }
 
     # Copy activity
     !exists($$ANDROID_PACKAGE_SOURCE_DIR/src/org/dreamdev/QtFirebase/QtFirebaseActivity.java)
