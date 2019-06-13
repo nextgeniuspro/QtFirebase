@@ -1,13 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "qtfirebase/firebase.h"
-#include "qtfirebase/admobbanner.h"
-#include "qtfirebase/admmobinterstitial.h"
-#include "qtfirebase/analytics.h"
-#include "qtfirebase/adrequest.h"
-#include "qtfirebase/authentification.h"
-#include "qtfirebase/user.h"
-#include "qtfirebase/platform.h"
+#include "firebase.h"
+#include "admobbanner.h"
+#include "admmobinterstitial.h"
+#include "analytics.h"
+#include "adrequest.h"
+#include "authentification.h"
+#include "user.h"
+#include "platform.h"
 #include <QFile>
 #include <QTextStream>
 

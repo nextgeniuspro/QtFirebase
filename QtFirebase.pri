@@ -37,6 +37,7 @@ HEADERS  += \
     $$PWD/database.h
 
 INCLUDEPATH += \
+    $$PWD \
     $$PWD/sdk/firebase_cpp_sdk/include
 
 ios: {
